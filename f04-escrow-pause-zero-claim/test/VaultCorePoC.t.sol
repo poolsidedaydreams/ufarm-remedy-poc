@@ -1,7 +1,26 @@
 // SPDX-License-Identifier: BUSL-1.1
+/**
+ * @title UFarm Digital - Redeem claim deleted before escrow release; claim lost when release fails, redeem returns 0
+ * @notice PoC for Remedy submission (F-04 / C-1)
+ * @dev Demonstrates the silent zero-claim: _claimRedeemAssets deletes the
+ *      claimable redeem before _releaseAvailableEscrow, so a release revert
+ *      (e.g. escrow pause) wipes the claim and redeem() returns 0.
+ *
+ * Vulnerable contract: VaultLifecycleModule (UFarmVault)
+ * Vulnerable function: _claimRedeemAssets / _releaseAvailableEscrow
+ * Vulnerable lines: VaultLifecycleModule.sol:768 (claim deleted),
+ *   :769 (escrow release), :934-951 (catch swallows the revert, returns 0);
+ *   same pattern in cancelDeposit (:182-183 delete, :185 release).
+ *   Pause bit: ESCROW_OPERATIONS_PAUSED, PauseMask.sol:16 (1 << 10).
+ * Program: https://hunt.r.xyz/programs/ufarm-digital
+ * Report: https://hunt.r.xyz/report-thread/e7f33e41-46e8-43b6-96e0-e1dade3af3e3
+ * Severity: Low
+ * Target: UFarmDigital/UFarm-EVM-Contracts @ b19a6511 ("Production Release 2.1.1")
+ */
 pragma solidity 0.8.35;
 
 import {Test} from "forge-std/Test.sol";
+import {console} from "forge-std/console.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {UFarmVault} from "../src/vault/UFarmVault.sol";
@@ -412,17 +431,23 @@ contract VaultCorePoC is Test {
         vault.requestRedeem(100e18, owner, owner);
         _settle(1000e18);
         assertEq(vault.claimableRedeemRequest(0, owner), 100e18);
+        console.log("claimableRedeem before redeem", vault.claimableRedeemRequest(0, owner));
+        console.log("owner asset balance before redeem", asset.balanceOf(owner));
 
         // Pause ONLY escrow operations (bit 10). Vault-level CLAIMS check does not cover this bit.
         core.setPauseMask(1 << 10);
         vm.prank(owner);
         uint256 released = vault.redeem(0, owner, owner);
+        console.log("redeem() returned (during escrow pause)", released);
+        console.log("claimableRedeem after redeem", vault.claimableRedeemRequest(0, owner));
         assertEq(released, 0, "claim during escrow pause silently pays 0");
         assertEq(vault.claimableRedeemRequest(0, owner), 0, "claimable is deleted");
 
         // Ledger backstop: credited 100e18 still sits in escrow under the owner, unlocked
         (uint256 bal, uint64 lockedTill) =
             IUFarmEscrow(address(escrow)).balanceOf(address(vault), address(asset), owner);
+        console.log("escrow balance credited to owner (after lost claim)", bal);
+        console.log("escrow lockedTill for that credit", lockedTill);
         assertEq(bal, 100e18);
         assertEq(lockedTill, 0);
 
@@ -430,6 +455,7 @@ contract VaultCorePoC is Test {
         core.setPauseMask(0);
         vm.prank(owner);
         IUFarmEscrow(address(escrow)).withdraw(address(vault), address(asset), 100e18, owner);
+        console.log("owner asset balance after direct escrow withdraw", asset.balanceOf(owner));
         assertEq(asset.balanceOf(owner), 100e18);
     }
 

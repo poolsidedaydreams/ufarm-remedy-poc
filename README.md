@@ -15,6 +15,16 @@ Solidity 0.8.35, Foundry 1.10.0, OpenZeppelin 5.6.1, forge-std latest.
 | `f04-escrow-pause-zero-claim/` | C-1 (= F-04) — redeem claim deleted before escrow release; claim lost when release fails, redeem returns 0 | Low | https://hunt.r.xyz/report-thread/e7f33e41-46e8-43b6-96e0-e1dade3af3e3 |
 | `f05-batch-settlement-gas/` | F-05 — unbounded signed-request batch lets griefing requests OOG settlement despite the 100k ERC-1271 gas cap (incomplete fix of Hexens UFARM2-1) | Low | https://hunt.r.xyz/report-thread/98e9a85b-a08c-4008-b972-6f2a47c5e1e0 |
 
+## PoC standard
+
+Every folder is a self-contained Foundry project following the standard used by
+rewarded hunters (Immunefi's `forge-poc-templates`): a clear README (bug
+summary, impact with numbers, reproduction steps), a test file headed with
+`@title` / Bug / Impact / Severity / vulnerable file + lines, remappings
+written out explicitly, the target commit pinned (`b19a6511`), and tests that
+log the before-vs-after numbers — those numbers are the proof. No zip files;
+all source is visible in the repo.
+
 ## Running a PoC
 
 ```bash
