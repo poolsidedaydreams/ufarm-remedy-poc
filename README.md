@@ -47,8 +47,8 @@ forge test --match-contract GriefPoCTest --gas-limit 100000000
 Each project was independently re-run and verified on 23 November 2026:
 F-03 `forge test` **3/3 pass**, F-04 `forge test` **9/9 pass**,
 F-05 `forge test --match-contract GriefPoCTest --gas-limit 100000000` **9/9 pass**
-(gas figures reproduce the reports exactly, e.g. F-05 control 523,602;
-N=250 grief 29,537,345; distinct-owners OOG 73,856,261).
+(gas figures as in each project's README, e.g. F-05 control 526,751;
+N=250 grief 29,537,345; distinct-owners OOG 73,884,705).
 
 The mock oracle in the F-03 project stands in for Quex delivery and reports the
 holdings-based NAV; no live deployment addresses exist in the repository, so all

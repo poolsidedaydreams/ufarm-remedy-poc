@@ -30,4 +30,4 @@ forge install --no-git foundry-rs/forge-std \
 forge test -vv
 ```
 
-Expected: **9/9 pass**. Key test: `testRedeemClaim_DuringEscrowPause_RecoverableViaEscrow` (gas 1,860,589). Run with `-vv` to see the before/after logs — `redeem()` returning 0 while the escrow balance stays 100e18 is the proof.
+Expected: **9/9 pass**. Key test: `testRedeemClaim_DuringEscrowPause_RecoverableViaEscrow` (gas 1,937,679). Run with `-vv` to see the before/after logs — `redeem()` returning 0 while the escrow balance stays 100e18 is the proof.

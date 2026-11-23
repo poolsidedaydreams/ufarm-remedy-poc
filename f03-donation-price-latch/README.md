@@ -31,4 +31,4 @@ forge install --no-git foundry-rs/forge-std \
 forge test -vv
 ```
 
-Expected: **3/3 pass**. Key test: `test_DonationBeforeFirstSettlement_LatchesPriceAndFreezesSettlement` (gas 3,709,102). Run with `-vv` to see the before/after logs — the reference price vs the true price is the proof.
+Expected: **3/3 pass**. Key test: `test_DonationBeforeFirstSettlement_LatchesPriceAndFreezesSettlement` (gas 3,801,816). Run with `-vv` to see the before/after logs — the reference price vs the true price is the proof.

@@ -12,12 +12,14 @@
 
 | Case | Gas |
 |---|---|
-| Control settlement, no griefing (N=0) | 523,602 |
-| 1 griefing request + settle | 670,091 |
-| N=10 griefing requests | 1,682,159 |
+| Control settlement, no griefing (N=0) | 526,751 |
+| 1 griefing request + settle | 673,222 |
+| N=10 griefing requests | 1,685,243 |
 | N=250 griefing requests | 29,537,345 |
-| **260 distinct-owner griefing requests** | **OOG at 30M gas** (73,856,261 measured) |
-| **280 same-owner griefing requests** | **OOG at 30M gas** (31,145,995 measured) |
+| **260 distinct-owner griefing requests** | **OOG at 30M gas** (73,884,705 measured) |
+| **280 same-owner griefing requests** | **OOG at 30M gas** (31,174,450 measured) |
+
+The figures above are the full test gas as reported by forge. The `-vv` logs show the settle-call gas alone: control 168,890; 1 griefing request 303,758; N=10 1,327,451.
 
 Each griefing request burns ~116k gas (~100k cap + validation overhead). At a 30M block gas limit, ~260 requests make the whole settlement revert — the legitimate pending deposit stays queued and settlement is blocked. The attacker's cost is **zero on-chain gas** (signed messages only, submitted off-chain to the backend); the settlement manager pays for the reverted transaction.
 
