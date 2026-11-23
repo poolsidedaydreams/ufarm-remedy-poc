@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {IAggregatorV3} from "../interfaces/chainlink/IAggregatorV3.sol";
+import {IAggregatorV3} from "../../src/interfaces/chainlink/IAggregatorV3.sol";
 
 contract MockChainlinkAggregator is IAggregatorV3 {
     uint8 public immutable override decimals;

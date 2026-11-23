@@ -4,13 +4,13 @@ pragma solidity 0.8.35;
 import {Test} from "forge-std/Test.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import {UFarmVault} from "../contracts/vault/UFarmVault.sol";
-import {VaultLifecycleModule} from "../contracts/vault/modules/VaultLifecycleModule.sol";
-import {VaultAdminConfigModule} from "../contracts/vault/modules/VaultAdminConfigModule.sol";
-import {VaultAdapterGatewayModule} from "../contracts/vault/modules/VaultAdapterGatewayModule.sol";
-import {UFarmEscrow} from "../contracts/escrow/UFarmEscrow.sol";
-import {IUFarmVaultRequests} from "../contracts/interfaces/IUFarmVaultRequests.sol";
-import {IUFarmEscrow} from "../contracts/interfaces/IUFarmEscrow.sol";
+import {UFarmVault} from "../src/vault/UFarmVault.sol";
+import {VaultLifecycleModule} from "../src/vault/modules/VaultLifecycleModule.sol";
+import {VaultAdminConfigModule} from "../src/vault/modules/VaultAdminConfigModule.sol";
+import {VaultAdapterGatewayModule} from "../src/vault/modules/VaultAdapterGatewayModule.sol";
+import {UFarmEscrow} from "../src/escrow/UFarmEscrow.sol";
+import {IUFarmVaultRequests} from "../src/interfaces/IUFarmVaultRequests.sol";
+import {IUFarmEscrow} from "../src/interfaces/IUFarmEscrow.sol";
 import {MockCore, MockCurator, MockOracle} from "./Mocks.sol";
 
 contract MockToken is ERC20 {

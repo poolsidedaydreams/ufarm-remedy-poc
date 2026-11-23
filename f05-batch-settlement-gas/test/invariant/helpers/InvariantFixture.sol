@@ -3,19 +3,19 @@ pragma solidity 0.8.35;
 
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {UpgradeableBeacon} from "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
-import {Permissions} from "../../../src/contracts/libraries/Permissions.sol";
-import {UFarmCore} from "../../../src/contracts/core/UFarmCore.sol";
-import {UFarmEscrow} from "../../../src/contracts/escrow/UFarmEscrow.sol";
-import {UFarmCurator} from "../../../src/contracts/curator/UFarmCurator.sol";
-import {UFarmVault} from "../../../src/contracts/vault/UFarmVault.sol";
-import {VaultAdapterGatewayModule} from "../../../src/contracts/vault/modules/VaultAdapterGatewayModule.sol";
-import {VaultAdminConfigModule} from "../../../src/contracts/vault/modules/VaultAdminConfigModule.sol";
-import {VaultLifecycleModule} from "../../../src/contracts/vault/modules/VaultLifecycleModule.sol";
-import {MockCreateX} from "../../../src/contracts/mocks/MockCreateX.sol";
-import {MockChainlinkAggregator} from "../../../src/contracts/mocks/MockChainlinkAggregator.sol";
-import {MockERC20} from "../../../src/contracts/mocks/MockERC20.sol";
-import {MockUFarmOracle} from "../../../src/contracts/mocks/MockUFarmOracle.sol";
-import {MockVaultAdapter} from "../../../src/contracts/mocks/MockVaultAdapter.sol";
+import {Permissions} from "../../../src/libraries/Permissions.sol";
+import {UFarmCore} from "../../../src/core/UFarmCore.sol";
+import {UFarmEscrow} from "../../../src/escrow/UFarmEscrow.sol";
+import {UFarmCurator} from "../../../src/curator/UFarmCurator.sol";
+import {UFarmVault} from "../../../src/vault/UFarmVault.sol";
+import {VaultAdapterGatewayModule} from "../../../src/vault/modules/VaultAdapterGatewayModule.sol";
+import {VaultAdminConfigModule} from "../../../src/vault/modules/VaultAdminConfigModule.sol";
+import {VaultLifecycleModule} from "../../../src/vault/modules/VaultLifecycleModule.sol";
+import {MockCreateX} from "../../../src/mocks/MockCreateX.sol";
+import {MockChainlinkAggregator} from "../../../src/mocks/MockChainlinkAggregator.sol";
+import {MockERC20} from "../../../src/mocks/MockERC20.sol";
+import {MockUFarmOracle} from "../../../src/mocks/MockUFarmOracle.sol";
+import {MockVaultAdapter} from "../../../src/mocks/MockVaultAdapter.sol";
 import {InvariantVm} from "./InvariantVm.sol";
 
 abstract contract InvariantFixture is InvariantVm {

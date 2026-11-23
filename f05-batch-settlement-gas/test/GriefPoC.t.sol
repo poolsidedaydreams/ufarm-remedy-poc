@@ -9,7 +9,7 @@
 pragma solidity 0.8.35;
 
 import {InvariantFixture} from "./invariant/helpers/InvariantFixture.sol";
-import {IUFarmVaultRequests} from "../src/contracts/interfaces/IUFarmVaultRequests.sol";
+import {IUFarmVaultRequests} from "../src/interfaces/IUFarmVaultRequests.sol";
 import {IERC1271} from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 
 contract GasGriefERC1271 is IERC1271 {

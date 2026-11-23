@@ -24,10 +24,10 @@ import {VaultLifecycleModule} from "../src/vault/modules/VaultLifecycleModule.so
 import {VaultAdminConfigModule} from "../src/vault/modules/VaultAdminConfigModule.sol";
 import {VaultAdapterGatewayModule} from "../src/vault/modules/VaultAdapterGatewayModule.sol";
 import {IUFarmVaultErrors} from "../src/vault/UFarmVaultErrors.sol";
-import {MockERC20} from "../src/mocks/MockERC20.sol";
-import {MockChainlinkAggregator} from "../src/mocks/MockChainlinkAggregator.sol";
-import {MockCreateX} from "../src/mocks/MockCreateX.sol";
-import {MockUFarmOracle} from "../src/mocks/MockUFarmOracle.sol";
+import {MockERC20} from "./mocks/MockERC20.sol";
+import {MockChainlinkAggregator} from "./mocks/MockChainlinkAggregator.sol";
+import {MockCreateX} from "./mocks/MockCreateX.sol";
+import {MockUFarmOracle} from "./mocks/MockUFarmOracle.sol";
 
 contract DonationPriceLatchTest is Test {
     uint256 internal constant MEMBER = 1 << 253;
