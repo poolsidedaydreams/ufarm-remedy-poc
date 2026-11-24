@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {CCIPClient, ICCIPRouter} from "../interfaces/ccip/ICCIPRouter.sol";
-import {IUFarmVaultCrossChain} from "../interfaces/IUFarmVaultCrossChain.sol";
+import {CCIPClient, ICCIPRouter} from "../../src/interfaces/ccip/ICCIPRouter.sol";
+import {IUFarmVaultCrossChain} from "../../src/interfaces/IUFarmVaultCrossChain.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract MockCCIPRouter is ICCIPRouter {

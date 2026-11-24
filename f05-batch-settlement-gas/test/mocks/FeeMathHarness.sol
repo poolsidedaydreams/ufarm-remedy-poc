@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {FeeMath} from "../libraries/FeeMath.sol";
+import {FeeMath} from "../../src/libraries/FeeMath.sol";
 
 contract FeeMathHarness {
     function aumFeeShares(uint256 supply, uint256 annualFee, uint256 elapsed) external pure returns (uint256) {

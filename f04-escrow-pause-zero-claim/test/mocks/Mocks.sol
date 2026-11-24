@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {IUFarmCore} from "../src/interfaces/IUFarmCore.sol";
-import {IUFarmOracleConsumer} from "../src/interfaces/IUFarmOracleConsumer.sol";
-import {IUFarmOracle} from "../src/interfaces/IUFarmOracle.sol";
+import {IUFarmCore} from "../../src/interfaces/IUFarmCore.sol";
+import {IUFarmOracleConsumer} from "../../src/interfaces/IUFarmOracleConsumer.sol";
+import {IUFarmOracle} from "../../src/interfaces/IUFarmOracle.sol";
 
 /// @notice Minimal stub of UFarmCore for vault-lifecycle PoCs.
 /// Only the functions the vault/escrow actually call are meaningfully implemented.

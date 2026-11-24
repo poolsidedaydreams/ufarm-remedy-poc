@@ -18,7 +18,7 @@
 
 - `src/` — production contracts, copied byte-identical from the scope repo at the pinned commit.
 - `test/VaultCorePoC.t.sol` — the PoC (9 tests). Header carries the bug, impact, severity, and vulnerable file + lines. The key test logs the claimable amount, the redeem result, and the escrow balance before vs after.
-- `test/Mocks.sol` — PoC-only mocks.
+- `test/mocks/Mocks.sol` — PoC-only mocks.
 - `foundry.toml`, `remappings.txt` — Foundry config; remappings are written out explicitly (forge-std + OpenZeppelin 5.6.1).
 
 ## Reproduce

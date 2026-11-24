@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {CrossChainCodec} from "../libraries/CrossChainCodec.sol";
-import {CrossChainTypes} from "../libraries/CrossChainTypes.sol";
+import {CrossChainCodec} from "../../src/libraries/CrossChainCodec.sol";
+import {CrossChainTypes} from "../../src/libraries/CrossChainTypes.sol";
 
 contract CrossChainCodecHarness {
     function encode(CrossChainTypes.CrossChainMessage memory message) external pure returns (bytes memory) {

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {IUFarmOracle} from "../interfaces/IUFarmOracle.sol";
-import {IUFarmOracleConsumer} from "../interfaces/IUFarmOracleConsumer.sol";
+import {IUFarmOracle} from "../../src/interfaces/IUFarmOracle.sol";
+import {IUFarmOracleConsumer} from "../../src/interfaces/IUFarmOracleConsumer.sol";
 
 contract MockUFarmOracleConsumer is IUFarmOracleConsumer {
     error MockConsumerRejected();

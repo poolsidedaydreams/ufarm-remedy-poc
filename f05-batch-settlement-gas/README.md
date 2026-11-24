@@ -12,12 +12,12 @@
 
 | Case | Gas |
 |---|---|
-| Control settlement, no griefing (N=0) | 526,751 |
-| 1 griefing request + settle | 673,222 |
-| N=10 griefing requests | 1,685,243 |
-| N=250 griefing requests | 29,537,345 |
-| **260 distinct-owner griefing requests** | **OOG at 30M gas** (73,884,705 measured) |
-| **280 same-owner griefing requests** | **OOG at 30M gas** (31,174,450 measured) |
+| Control settlement, no griefing (N=0) | 526,722 |
+| 1 griefing request + settle | 673,193 |
+| N=10 griefing requests | 1,685,214 |
+| N=250 griefing requests | 29,537,316 |
+| **260 distinct-owner griefing requests** | **OOG at 30M gas** (73,884,676 measured) |
+| **280 same-owner griefing requests** | **OOG at 30M gas** (31,174,421 measured) |
 
 The figures above are the full test gas as reported by forge. The `-vv` logs show the settle-call gas alone: control 168,890; 1 griefing request 303,758; N=10 1,327,451.
 
@@ -27,6 +27,7 @@ Each griefing request burns ~116k gas (~100k cap + validation overhead). At a 30
 
 - `src/` — production contracts, copied byte-identical from the scope repo at the pinned commit.
 - `test/GriefPoC.t.sol` — the PoC (9 tests; `GasGriefERC1271` is defined in the file). Header carries the bug, impact, severity, and vulnerable file + lines. Tests log the gas before vs after (control vs griefed) and the settlement success flag.
+- `test/mocks/` — PoC-only mocks (24 files).
 - `test/invariant/helpers/` — fixture the PoC deploys through (`InvariantFixture.sol`, `InvariantVm.sol`).
 - `foundry.toml`, `remappings.txt` — Foundry config; remappings are written out explicitly (forge-std + OpenZeppelin 5.6.1).
 
@@ -36,7 +37,7 @@ Each griefing request burns ~116k gas (~100k cap + validation overhead). At a 30
 forge install --no-git foundry-rs/forge-std \
   OpenZeppelin/openzeppelin-contracts@v5.6.1 \
   OpenZeppelin/openzeppelin-contracts-upgradeable@v5.6.1
-forge test --match-contract GriefPoCTest --gas-limit 100000000 -vv
+forge test -vv
 ```
 
 Expected: **9/9 pass**. Run with `-vv` to see the before/after gas logs — the control-vs-griefed gas figures are the proof.

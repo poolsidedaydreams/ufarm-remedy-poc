@@ -11,11 +11,11 @@ import {UFarmVault} from "../../../src/vault/UFarmVault.sol";
 import {VaultAdapterGatewayModule} from "../../../src/vault/modules/VaultAdapterGatewayModule.sol";
 import {VaultAdminConfigModule} from "../../../src/vault/modules/VaultAdminConfigModule.sol";
 import {VaultLifecycleModule} from "../../../src/vault/modules/VaultLifecycleModule.sol";
-import {MockCreateX} from "../../../src/mocks/MockCreateX.sol";
-import {MockChainlinkAggregator} from "../../../src/mocks/MockChainlinkAggregator.sol";
-import {MockERC20} from "../../../src/mocks/MockERC20.sol";
-import {MockUFarmOracle} from "../../../src/mocks/MockUFarmOracle.sol";
-import {MockVaultAdapter} from "../../../src/mocks/MockVaultAdapter.sol";
+import {MockCreateX} from "../../mocks/MockCreateX.sol";
+import {MockChainlinkAggregator} from "../../mocks/MockChainlinkAggregator.sol";
+import {MockERC20} from "../../mocks/MockERC20.sol";
+import {MockUFarmOracle} from "../../mocks/MockUFarmOracle.sol";
+import {MockVaultAdapter} from "../../mocks/MockVaultAdapter.sol";
 import {InvariantVm} from "./InvariantVm.sol";
 
 abstract contract InvariantFixture is InvariantVm {

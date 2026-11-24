@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {DataItem, Flow, IdType, IFlowRegistry, IQuexActionRegistry} from "../interfaces/quex/IQuex.sol";
+import {DataItem, Flow, IdType, IFlowRegistry, IQuexActionRegistry} from "../../src/interfaces/quex/IQuex.sol";
 
 interface IQuexCallbackReceiver {
     function quexCallback(uint256 requestId, DataItem calldata response, IdType idType) external;

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {CrossChainReducer} from "../libraries/CrossChainReducer.sol";
-import {CrossChainTypes} from "../libraries/CrossChainTypes.sol";
+import {CrossChainReducer} from "../../src/libraries/CrossChainReducer.sol";
+import {CrossChainTypes} from "../../src/libraries/CrossChainTypes.sol";
 
 contract CrossChainReducerHarness {
     function accountingAction(

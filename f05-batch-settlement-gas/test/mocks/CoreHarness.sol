@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {DeterministicSalts} from "../libraries/DeterministicSalts.sol";
-import {DeterministicDeployer} from "../libraries/DeterministicDeployer.sol";
-import {PauseMask} from "../libraries/PauseMask.sol";
-import {Permissions} from "../libraries/Permissions.sol";
+import {DeterministicSalts} from "../../src/libraries/DeterministicSalts.sol";
+import {DeterministicDeployer} from "../../src/libraries/DeterministicDeployer.sol";
+import {PauseMask} from "../../src/libraries/PauseMask.sol";
+import {Permissions} from "../../src/libraries/Permissions.sol";
 
 contract CoreHarness {
     function hasPermission(uint256 mask, uint256 permissionMask) external pure returns (bool) {

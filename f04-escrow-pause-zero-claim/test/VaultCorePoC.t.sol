@@ -30,14 +30,14 @@ import {VaultAdapterGatewayModule} from "../src/vault/modules/VaultAdapterGatewa
 import {UFarmEscrow} from "../src/escrow/UFarmEscrow.sol";
 import {IUFarmVaultRequests} from "../src/interfaces/IUFarmVaultRequests.sol";
 import {IUFarmEscrow} from "../src/interfaces/IUFarmEscrow.sol";
-import {MockCore, MockCurator, MockOracle} from "./Mocks.sol";
+import {MockCore, MockCurator, MockOracle} from "./mocks/Mocks.sol";
 
 contract MockToken is ERC20 {
     constructor() ERC20("Mock USD", "mUSD") {}
     function mint(address to, uint256 amt) external { _mint(to, amt); }
 }
 
-/// @notice PoC tests for Worker A (vault core logic) — verifies the key NEGATIVE claims:
+/// @notice PoC tests for the vault core logic — verifies the key NEGATIVE claims:
 ///  1. first-depositor donation inflation yields zero profit (guard OFF by default),
 ///  2. rounding-to-zero deposits fail safely and funds stay recoverable,
 ///  3. signed-request minOutputAmount is enforced at settlement,

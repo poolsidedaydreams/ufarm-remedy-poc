@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {IUFarmOracle} from "../interfaces/IUFarmOracle.sol";
-import {IUFarmVault} from "../interfaces/IUFarmVault.sol";
+import {IUFarmOracle} from "../../src/interfaces/IUFarmOracle.sol";
+import {IUFarmVault} from "../../src/interfaces/IUFarmVault.sol";
 
 contract MockUFarmOracle is IUFarmOracle {
     error UnknownRequest(uint256 requestId);

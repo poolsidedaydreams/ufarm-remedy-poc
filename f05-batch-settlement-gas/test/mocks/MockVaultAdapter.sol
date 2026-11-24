@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {IUFarmVault} from "../interfaces/IUFarmVault.sol";
-import {SettlementAction} from "../libraries/SettlementAction.sol";
+import {IUFarmVault} from "../../src/interfaces/IUFarmVault.sol";
+import {SettlementAction} from "../../src/libraries/SettlementAction.sol";
 
 contract MockVaultAdapter {
     error MockAdapterFailed(uint256 code);

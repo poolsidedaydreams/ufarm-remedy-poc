@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {CCIPClient} from "../interfaces/ccip/ICCIPRouter.sol";
-import {SettlementAction} from "../libraries/SettlementAction.sol";
+import {CCIPClient} from "../../src/interfaces/ccip/ICCIPRouter.sol";
+import {SettlementAction} from "../../src/libraries/SettlementAction.sol";
 
 contract MockVaultCrossChainReceiveAdapter {
     error MockCCIPReceiveFailed(uint64 sourceChainSelector);

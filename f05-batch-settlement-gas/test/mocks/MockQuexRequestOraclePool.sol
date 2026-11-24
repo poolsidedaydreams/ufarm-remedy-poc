@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.35;
 
-import {HTTPRequest, QueryParameter, RequestHeader, IRequestOraclePool} from "../interfaces/quex/IQuex.sol";
+import {HTTPRequest, QueryParameter, RequestHeader, IRequestOraclePool} from "../../src/interfaces/quex/IQuex.sol";
 
 contract MockQuexRequestOraclePool is IRequestOraclePool {
     struct StoredRequest {
